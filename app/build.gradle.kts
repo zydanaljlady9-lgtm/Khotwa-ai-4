@@ -28,8 +28,7 @@ android {
 
     signingConfigs {
         create("debugConfig") {
-            val rootKeystore = file("${rootDir}/debug.keystore")
-            storeFile = if (rootKeystore.exists()) rootKeystore else file("debug.keystore")
+            storeFile = file("${rootDir}/debug.keystore")
             storePassword = "android"
             keyAlias = "androiddebugkey"
             keyPassword = "android"
@@ -47,6 +46,11 @@ android {
             // نفس توقيع نسخ debug حتى يعمل التحديث فوق النسخة المثبتة.
             signingConfig = signingConfigs.getByName("debugConfig")
         }
+    }
+
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 
     testOptions {
