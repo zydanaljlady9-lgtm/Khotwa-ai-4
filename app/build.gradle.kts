@@ -27,8 +27,9 @@ android {
     }
 
     signingConfigs {
-        getByName("debug") {
-            storeFile = file("debug.keystore")
+        create("debugConfig") {
+            val rootKeystore = file("${rootDir}/debug.keystore")
+            storeFile = if (rootKeystore.exists()) rootKeystore else file("debug.keystore")
             storePassword = "android"
             keyAlias = "androiddebugkey"
             keyPassword = "android"
@@ -36,12 +37,15 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debugConfig")
+        }
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             // نفس توقيع نسخ debug حتى يعمل التحديث فوق النسخة المثبتة.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("debugConfig")
         }
     }
 
